@@ -8,7 +8,7 @@ echo "*** Starting Alice node"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # start node
-$DIR/target/release/node-template \
+$DIR/target/release/sentinel-chain \
   --base-path /tmp/alice \
   --chain=local \
   --alice \

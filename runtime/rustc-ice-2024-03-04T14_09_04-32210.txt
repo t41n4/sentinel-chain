@@ -53,6 +53,6 @@ rustc version: 1.78.0-nightly (5119208fd 2024-03-02)
 platform: x86_64-unknown-linux-gnu
 
 query stack during panic:
-#0 [mir_drops_elaborated_and_const_checked] elaborating drops for `<impl at /home/n4t41/substrate-node-template/runtime/src/lib.rs:292:1: 308:2>::set_caller_from`
+#0 [mir_drops_elaborated_and_const_checked] elaborating drops for `<impl at /home/n4t41/substrate-sentinel-chain/runtime/src/lib.rs:292:1: 308:2>::set_caller_from`
 #1 [analysis] running analysis passes on this crate
 end of query stack

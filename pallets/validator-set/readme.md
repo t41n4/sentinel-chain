@@ -178,7 +178,7 @@ fn testnet_genesis(
 
 ## Run
 
-Once you have set up the pallet in your node/node-template and everything compiles, follow the steps in [docs/local-network-setup.md](./docs/local-network-setup.md) to run a local network and add validators.
+Once you have set up the pallet in your node/sentinel-chain and everything compiles, follow the steps in [docs/local-network-setup.md](./docs/local-network-setup.md) to run a local network and add validators.
 
 ## Extensions
 

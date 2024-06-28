@@ -7,7 +7,7 @@
 //! EXECUTION: Some(Wasm), WASM-EXECUTION: Compiled, CHAIN: Some("local"), DB CACHE: 1024
 
 // Executed Command:
-// ./target/release/node-template
+// ./target/release/sentinel-chain
 // benchmark
 // pallet
 // --chain

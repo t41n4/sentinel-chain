@@ -8,4 +8,4 @@ echo "*** Generating Chain Spec"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # start node
-$DIR/target/release/node-template build-spec --raw --chain local > localSpec.json
+$DIR/target/release/sentinel-chain build-spec --raw --chain local > localSpec.json

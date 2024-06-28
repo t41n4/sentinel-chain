@@ -98,7 +98,7 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 
 	Ok(ChainSpec::from_genesis(
 		// Name
-		"Local Testnet",
+		"Sentinel Chain Testnet",
 		// ID
 		"local_testnet",
 		ChainType::Local,

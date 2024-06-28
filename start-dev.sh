@@ -1,1 +1,1 @@
-./target/release/node-template --dev
+./target/release/sentinel-chain --dev

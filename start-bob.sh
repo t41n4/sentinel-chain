@@ -8,7 +8,7 @@ echo "*** Starting bob node"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # start node
-$DIR/target/release/node-template \
+$DIR/target/release/sentinel-chain \
   --base-path /tmp/bob \
   --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp \
   --chain=local \
