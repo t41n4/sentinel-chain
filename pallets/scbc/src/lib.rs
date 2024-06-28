@@ -30,7 +30,6 @@ pub mod pallet {
 	pub struct PhoneRecord {
 		trust_rating: TrustRating,
 		status: StatusType,
-		unique_id: UniqueId,
 		spam_records: Vec<SpamRecord>,
 		call_records: Vec<CallRecord>,
 	}
@@ -123,12 +122,12 @@ pub mod pallet {
 				Error::<T>::PhoneNumberAlreadyRegistered
 			);
 
-			let unique_id = Self::gen_unique_id();
+			// let unique_id = Self::gen_unique_id();
 
 			let new_phone_record = PhoneRecord {
 				trust_rating: 0,
 				status: "normal".as_bytes().to_vec(),
-				unique_id,
+				// unique_id,
 				spam_records: vec![],
 				call_records: vec![],
 			};
@@ -147,6 +146,7 @@ pub mod pallet {
 		) -> DispatchResult {
 			// Ensure the caller is signed
 			// let who = ensure_signed(origin)?;
+			let unique_id = Self::gen_unique_id();
 
 			// Check if the phone number exists, otherwise register it automatically
 			Self::register_if_not_exists(spammee.clone());
@@ -158,7 +158,6 @@ pub mod pallet {
 			phone_record.trust_rating = Self::update_trust_rating(phone_record.trust_rating, -10);
 
 			// Generate a unique ID for the spam record
-			let unique_id = Self::gen_unique_id();
 
 			let _now = <timestamp::Pallet<T>>::get();
 			let timestamp_bytes: Vec<u8> = _now.encode().to_vec();
@@ -228,17 +227,17 @@ pub mod pallet {
 			callee: PhoneNumber,
 		) -> DispatchResult {
 			// ensure_signed(origin)?;
-
+			let unique_id = Self::gen_unique_id();
 			// check if the callee phone number exists in the ledger else register it
 			Self::register_if_not_exists(caller.clone());
 
 			// get the phone record of the callee
-			let mut caller_phone_record = Ledger::<T>::get(&caller).unwrap();
+			let mut caller_phone_record = Ledger::<T>::get(&caller).unwrap_or_default();
 
 			// create a new call record
 			let _now = <timestamp::Pallet<T>>::get();
 			let timestamp: Vec<u8> = _now.encode().to_vec();
-			let unique_id = Self::gen_unique_id();
+		
 
 			let caller_call_record = CallRecord {
 				caller: caller.clone(),
@@ -263,9 +262,8 @@ pub mod pallet {
 			Self {
 				trust_rating: 0,
 				status: "normal".as_bytes().to_vec(),
-				unique_id: [0u8; 16],
-				spam_records: vec![],
-				call_records: vec![],
+				spam_records: Vec::new(),
+				call_records: Vec::new()
 			}
 		}
 	}
@@ -273,11 +271,10 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		fn register_if_not_exists(phone_number: PhoneNumber) {
 			if !Ledger::<T>::contains_key(&phone_number) {
-				let unique_id = Self::gen_unique_id();
 				let new_phone_record = PhoneRecord {
 					trust_rating: 0,
 					status: "normal".as_bytes().to_vec(),
-					unique_id,
+					// unique_id: unique_id,
 					spam_records: vec![],
 					call_records: vec![],
 				};

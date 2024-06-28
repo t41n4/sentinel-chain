@@ -13,7 +13,8 @@ use sp_core::{crypto::KeyTypeId, OpaqueMetadata};
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
 	traits::{
-		AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, One, OpaqueKeys,
+		AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, One, 
+		// OpaqueKeys,
 		Verify,
 	},
 	transaction_validity::{TransactionPriority, TransactionSource, TransactionValidity},
@@ -111,8 +112,8 @@ pub mod opaque {
 // https://docs.substrate.io/main-docs/build/upgrade#runtime-versioning
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("node-template"),
-	impl_name: create_runtime_str!("node-template"),
+	spec_name: create_runtime_str!("sentinel-chain"),
+	impl_name: create_runtime_str!("sentinel-chain"),
 	authoring_version: 1,
 	// The version of the runtime specification. A full node will not attempt to use its native
 	//   runtime in substitute for the on-chain Wasm runtime unless all of `spec_name`,
@@ -351,10 +352,10 @@ impl pallet_zk_snarks::Config for Runtime {
 	type WeightInfo = pallet_zk_snarks::weights::SubstrateWeight<Runtime>;
 }
 
-type EnsureRootOrHalfCouncil = EitherOfDiverse<
-	EnsureRoot<AccountId>,
-	pallet_collective::EnsureProportionMoreThan<AccountId, CouncilCollective, 1, 2>,
->;
+// type EnsureRootOrHalfCouncil = EitherOfDiverse<
+// 	EnsureRoot<AccountId>,
+// 	pallet_collective::EnsureProportionMoreThan<AccountId, CouncilCollective, 1, 2>,
+// >;
 
 parameter_types! {
 	pub const ImOnlineUnsignedPriority: TransactionPriority = TransactionPriority::max_value();
@@ -369,29 +370,29 @@ parameter_types! {
 	pub const MinAuthorities: u32 = 2;
 }
 
-impl validator_set::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type AddRemoveOrigin = EnsureRootOrHalfCouncil;
-	type MinAuthorities = MinAuthorities;
-	type WeightInfo = validator_set::weights::SubstrateWeight<Runtime>;
-}
+// impl validator_set::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type AddRemoveOrigin = EnsureRootOrHalfCouncil;
+// 	type MinAuthorities = MinAuthorities;
+// 	type WeightInfo = validator_set::weights::SubstrateWeight<Runtime>;
+// }
 
 parameter_types! {
 	pub const Period: u32 = 2 * MINUTES;
 	pub const Offset: u32 = 0;
 }
 
-impl pallet_session::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type ValidatorId = <Self as frame_system::Config>::AccountId;
-	type ValidatorIdOf = validator_set::ValidatorOf<Self>;
-	type ShouldEndSession = pallet_session::PeriodicSessions<Period, Offset>;
-	type NextSessionRotation = pallet_session::PeriodicSessions<Period, Offset>;
-	type SessionManager = ValidatorSet;
-	type SessionHandler = <opaque::SessionKeys as OpaqueKeys>::KeyTypeIdProviders;
-	type Keys = opaque::SessionKeys;
-	type WeightInfo = ();
-}
+// impl pallet_session::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type ValidatorId = <Self as frame_system::Config>::AccountId;
+// 	type ValidatorIdOf = validator_set::ValidatorOf<Self>;
+// 	type ShouldEndSession = pallet_session::PeriodicSessions<Period, Offset>;
+// 	type NextSessionRotation = pallet_session::PeriodicSessions<Period, Offset>;
+// 	type SessionManager = ValidatorSet;
+// 	type SessionHandler = <opaque::SessionKeys as OpaqueKeys>::KeyTypeIdProviders;
+// 	type Keys = opaque::SessionKeys;
+// 	type WeightInfo = ();
+// }
 
 // impl pallet_session::historical::Config for Runtime {
 // 	type FullIdentification = pallet_staking::Exposure<AccountId, Balance>;
@@ -404,8 +405,8 @@ construct_runtime!(
 		System: frame_system,
 		Timestamp: pallet_timestamp,
 
-		ValidatorSet: validator_set,
-		Session: pallet_session,
+		// ValidatorSet: validator_set,
+		// Session: pallet_session,
 
 		Aura: pallet_aura,
 		Grandpa: pallet_grandpa,
