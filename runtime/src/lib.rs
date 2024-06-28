@@ -58,11 +58,11 @@ pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
 /// Import the template pallet.
-pub use pallet_template;
+// pub use pallet_template;
 pub use scbc;
 
 /// Import the zk-snarks pallet.
-pub use pallet_zk_snarks;
+// pub use pallet_zk_snarks;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -309,10 +309,10 @@ impl pallet_sudo::Config for Runtime {
 }
 
 /// Configure the pallet-template in pallets/template.
-impl pallet_template::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = pallet_template::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_template::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type WeightInfo = pallet_template::weights::SubstrateWeight<Runtime>;
+// }
 
 impl scbc::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -343,14 +343,14 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 	type MaxProposalWeight = MaxCollectivesProposalWeight;
 }
 
-/// Configure the pallet-template in pallets/zk-snarks.
-impl pallet_zk_snarks::Config for Runtime {
-	type MaxPublicInputsLength = ConstU32<9>;
-	type MaxProofLength = ConstU32<1115>;
-	type MaxVerificationKeyLength = ConstU32<4079>;
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = pallet_zk_snarks::weights::SubstrateWeight<Runtime>;
-}
+// Configure the pallet-template in pallets/zk-snarks.
+// impl pallet_zk_snarks::Config for Runtime {
+// 	type MaxPublicInputsLength = ConstU32<9>;
+// 	type MaxProofLength = ConstU32<1115>;
+// 	type MaxVerificationKeyLength = ConstU32<4079>;
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type WeightInfo = pallet_zk_snarks::weights::SubstrateWeight<Runtime>;
+// }
 
 // type EnsureRootOrHalfCouncil = EitherOfDiverse<
 // 	EnsureRoot<AccountId>,
@@ -419,9 +419,9 @@ construct_runtime!(
 		// Include the custom logic from the pallet-template in the runtime.
 		Council: pallet_collective::<Instance1>,
 		// Council: pallet_collective,
-		TemplateModule: pallet_template,
+		// TemplateModule: pallet_template,
 		SCBC: scbc,
-		ZKSnarks: pallet_zk_snarks,
+		// ZKSnarks: pallet_zk_snarks,
 
 	}
 );
@@ -470,8 +470,8 @@ mod benches {
 		[pallet_balances, Balances]
 		[pallet_timestamp, Timestamp]
 		[pallet_sudo, Sudo]
-		[pallet_template, TemplateModule],
-		[pallet_zk_snarks, ZKSnarks]
+		// [pallet_template, TemplateModule],
+		// [pallet_zk_snarks, ZKSnarks]
 
 	);
 }
