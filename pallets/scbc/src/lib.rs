@@ -23,7 +23,8 @@ pub mod pallet {
 
 	type TrustRating = i8;
 
-	const SPAM_THRESHOLD: i8 = -50;
+	const SPAM_THRESHOLD: i8 = -30;
+	const NORMAL_THRESHOLD: i8 = 0;
 
 	// Data Structures
 	#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo)]
@@ -41,6 +42,7 @@ pub mod pallet {
 		reason: Reason,
 		unique_id: UniqueId,
 		who: PhoneNumber,
+		is_spam: bool,
 	}
 
 	#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo)]
@@ -80,31 +82,19 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		RegisterPhoneNumber { phone_number: PhoneNumber },
 		RegiterDomain { domain: StatusType },
-		ReportSPAM { spammee: PhoneNumber, spammer: PhoneNumber, reason: Reason },
+		ReportSPAM { spammee: PhoneNumber, spammer: PhoneNumber, reason: Reason, is_spam: bool},
 		MakeCall { caller: PhoneNumber, callee: PhoneNumber },
 		MarkSpam { phone_number: PhoneNumber, metadata: Vec<u8> },
 	}
 
 	#[pallet::error]
 	pub enum Error<T> {
-		/// The phone number is already registered
 		PhoneNumberAlreadyRegistered,
-		/// The domain is already registered
-		DomainAlreadyRegistered,
-		/// The phone number is not registered
 		PhoneNumberNotRegistered,
-		/// The domain is not registered
-		DomainNotRegistered,
-		/// The phone number is not spam
 		PhoneNumberNotSpam,
-		/// The domain is not spam
-		DomainNotSpam,
-		/// The phone number is spam
 		PhoneNumberAlreadySpam,
-		/// The domain is spam
-		DomainSpam,
-		/// The phone number is not reach threshold
 		PhoneNumberNotReachThreshold,
+		PhoneNumberAlreadyNormal,		
 	}
 
 	// // Dispatchable Calls (Extrinsics)
@@ -143,6 +133,7 @@ pub mod pallet {
 			spammee: PhoneNumber,
 			spammer: PhoneNumber,
 			reason: Reason,
+			is_spam: bool,
 		) -> DispatchResult {
 			// Ensure the caller is signed
 			// let who = ensure_signed(origin)?;
@@ -154,10 +145,13 @@ pub mod pallet {
 			// Fetch the existing phone record (guaranteed that it exists at this point)
 			let mut phone_record = Ledger::<T>::get(&spammer).unwrap_or_default();
 
-			// Update the trust rating of the phone number
-			phone_record.trust_rating = Self::update_trust_rating(phone_record.trust_rating, -10);
-
-			// Generate a unique ID for the spam record
+			if is_spam {
+				// Update the trust rating of the phone number
+				phone_record.trust_rating = Self::update_trust_rating(phone_record.trust_rating, -10);
+			} else {
+				// Update the trust rating of the phone number
+				phone_record.trust_rating = Self::update_trust_rating(phone_record.trust_rating, 10);
+			}
 
 			let _now = <timestamp::Pallet<T>>::get();
 			let timestamp_bytes: Vec<u8> = _now.encode().to_vec();
@@ -167,6 +161,7 @@ pub mod pallet {
 				reason: reason.clone(),
 				unique_id,
 				who: spammee.clone(),
+				is_spam: is_spam.clone(),
 			};
 
 			// Add the spam transaction to the record
@@ -175,7 +170,7 @@ pub mod pallet {
 			// Update the ledger with the modified phone record information
 			Ledger::<T>::insert(&spammer, phone_record);
 			// Report spam event
-			Self::deposit_event(Event::ReportSPAM { spammee, spammer, reason });
+			Self::deposit_event(Event::ReportSPAM { spammee, spammer, reason, is_spam });
 
 			Ok(())
 		}
@@ -214,7 +209,19 @@ pub mod pallet {
 					Self::deposit_event(Event::MarkSpam { phone_number: spammer, metadata });
 					Ok(())
 				}
-			} else {
+			} else if phone_record.trust_rating >= NORMAL_THRESHOLD{
+				if status == "normal".as_bytes().to_vec() {
+					Err(Error::<T>::PhoneNumberAlreadyNormal)?
+				} else {
+					phone_record.status = Self::update_status(&phone_record.status, "normal");
+					// Update the ledger with the modified phone record information
+					Ledger::<T>::insert(&spammer, phone_record);
+
+					Self::deposit_event(Event::MarkSpam { phone_number: spammer, metadata });
+					Ok(())
+				}
+			} else 
+			{
 				Err(Error::<T>::PhoneNumberNotReachThreshold)?
 			}
 		}
