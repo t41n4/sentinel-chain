@@ -318,7 +318,8 @@ impl scbc::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type MaximumOwned = frame_support::pallet_prelude::ConstU32<100>;
 	type CollectionRandomness = RandomnessCollectiveFlip;
-	type ThresholdSpam = frame_support::traits::ConstI8<-50>;
+	type ThresholdSpam = frame_support::traits::ConstI8<-30>;
+	type ThresholdNormal = frame_support::traits::ConstI8<0>;
 }
 
 impl pallet_insecure_randomness_collective_flip::Config for Runtime {}

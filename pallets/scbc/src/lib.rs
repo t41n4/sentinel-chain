@@ -75,6 +75,8 @@ pub mod pallet {
 		type MaximumOwned: Get<u32>;
 		#[pallet::constant]
 		type ThresholdSpam: Get<i8>;
+		#[pallet::constant]
+		type ThresholdNormal: Get<i8>;
 	}
 	// Events
 	#[pallet::event]
