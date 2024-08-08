@@ -7,7 +7,7 @@ license = 'Apache-2.0'
 
 [dev-dependencies.serde]
 features = ['derive']
-version = '1.0.188'
+version = '1.0.205'
 
 [dev-dependencies.sp-state-machine]
 default-features = false
